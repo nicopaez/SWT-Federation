@@ -3,17 +3,22 @@
 This library provides SWT-based federation for Ruby applications (ruby 1.9)
 
 The entry point of this library is the TokenHandler class. Before using it you have to set some class instance 
-variables that hold configuration information.
+variables that hold configuration information. You can do this, int he config.ru file as shown below.
 
+  # config.ru
+  require './application.rb'
+  require 'swt_federation'
 
-TokenHandler.realm = 'http://0.0.0.0:8080/login/'
-TokenHandler.token_type = 'http://schemas.xmlsoap.org/ws/2009/11/swt-token-profile-1.0'
-TokenHandler.issuer = 'https://southworksinc.accesscontrol.windows.net/'
-TokenHandler.toke_key = 'your key here'
+  SwtFederation::TokenHandler.realm = 'yourrealmhere'
+  SwtFederation::TokenHandler.issuer = 'https://yourservicenamespacehere.accesscontrol.windows.net/'
+  SwtFederation::TokenHandler.token_key = 'yourkeyhere'
+  SwtFederation::TokenHandler.token_type = 'http://schemas.xmlsoap.org/ws/2009/11/swt-token-profile-1.0'
 
-The lines above can be placed in the config.ru file.
+  run Sinatra::Application
+
 Below you can find an example of how to use it with Sinatra.
 
+  # application.rb
   before do
 
     next if request.path_info == '/swt' 
@@ -37,3 +42,10 @@ Below you can find an example of how to use it with Sinatra.
       halt('access denied')
     end
   end
+
+  get '/'
+    user = session['user']
+    "Hello #{user}!"
+  end
+
+This is the very first drop, there many things to fix (add test, check coding conventions, etc)
