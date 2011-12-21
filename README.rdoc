@@ -1,3 +1,39 @@
 = SWT Federation for Ruby
 
 This library provides SWT-based federation for Ruby applications (ruby 1.9)
+
+The entry point of this library is the TokenHandler class. Before using it you have to set some class instance 
+variables that hold configuration information.
+
+
+TokenHandler.realm = 'http://0.0.0.0:8080/login/'
+TokenHandler.token_type = 'http://schemas.xmlsoap.org/ws/2009/11/swt-token-profile-1.0'
+TokenHandler.issuer = 'https://southworksinc.accesscontrol.windows.net/'
+TokenHandler.toke_key = 'your key here'
+
+The lines above can be placed in the config.ru file.
+Below you can find an example of how to use it with Sinatra.
+
+  before do
+
+    next if request.path_info == '/swt' 
+    if(session['user']==nil)
+      redirect ("<your_identity_provider_url>")
+    end
+  end
+
+  post '/swt' do
+    response = TokenHandler.new(params[:wresult])
+    if (response.is_valid?)
+      session['user'] = response.claims['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress']
+      target_url = params[:wctx]
+      if (target_url != nil)   
+        redirect(target_url)
+      else
+        redirect('/home') 
+      end
+    else
+      status(403)
+      halt('access denied')
+    end
+  end
