@@ -48,4 +48,4 @@ Below you can find an example of how to use it with Sinatra.
     "Hello #{user}!"
   end
 
-This is the very first drop, there many things to fix (add test, check coding conventions, etc)
+This is the very first drop, there are many things to fix (add test, check coding conventions, etc) that I will tackle during the next weeks.
