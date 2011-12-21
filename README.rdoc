@@ -1,0 +1,3 @@
+= SWT Federation for Ruby
+
+This library provides SWT-based federation for Ruby applications (ruby 1.9)
