@@ -27,6 +27,10 @@ module SwtFederation
       @validation_errors.empty?
     end
   
+
+    def is_token_valid?
+      is_valid?
+    end
     #parse through the document, performing validation & pulling out claims
     def parse_response
       parse_address()
@@ -65,10 +69,12 @@ module SwtFederation
       decoded_token = Base64.decode64(binary_token)
       name_values={}
       decoded_token.split('&').each do |entry|
+        puts entry
         pair=entry.split('=') 
         name_values[CGI.unescape(pair[0]).chomp] = CGI.unescape(pair[1]).chomp
       end
-
+      puts "expires on"
+      puts name_values["ExpiresOn"]
       @validation_errors << "Response token is expired." if Time.now.to_i > name_values["ExpiresOn"].to_i
       @validation_errors << "Invalid token issuer." unless name_values["Issuer"]=="#{self.class.issuer}"
       @validation_errors << "Invalid audience." unless name_values["Audience"] =="#{self.class.realm}"
@@ -76,6 +82,13 @@ module SwtFederation
       # is HMAC valid?
       token_hmac = decoded_token.split("&HMACSHA256=")
       swt=token_hmac[0]
+      puts "===="
+      puts "incoming hmac is"
+      puts name_values['HMACSHA256']
+      puts "calculated hmac is"
+      puts Base64.encode64(OpenSSL::HMAC.digest(OpenSSL::Digest::Digest.new('sha256'),Base64.decode64(self.class.token_key),swt)).chomp
+      puts "===="
+      
       @validation_errors << "HMAC does not match computed value." unless name_values['HMACSHA256'] == Base64.encode64(OpenSSL::HMAC.digest(OpenSSL::Digest::Digest.new('sha256'),Base64.decode64(self.class.token_key),swt)).chomp
     
       # remove non-claims from collection and make claims available
