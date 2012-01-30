@@ -1,6 +1,5 @@
 # http://blog.thepete.net/2010/11/creating-and-publishing-your-first-ruby.html
 require "swt_federation/version"
-
 require 'nokogiri'
 require 'time'
 require 'base64'
@@ -11,8 +10,13 @@ require 'openssl'
 module SwtFederation
 
   class TokenHandler
-    class << self; attr_accessor :realm, :issuer, :token_key, :token_type end
+    class << self; attr_accessor :realm, :issuer, :token_key, :token_type, :claim_types end
     
+    def self.initializeToken()
+      self.class.claim_types = {}
+      self.class.claim_types[:email] = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"
+    end
+
     attr_reader :validation_errors, :claims
 
     def initialize(wresult)
