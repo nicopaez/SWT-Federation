@@ -1,5 +1,7 @@
 = SWT Federation for Ruby
 
+[![Build Status](https://secure.travis-ci.org/nicopaez/SWT-Federation.png?branch=master)](http://travis-ci.org/nicopaez/SWT-Federation)
+
 This library provides SWT-based federation for Ruby applications (ruby 1.9)
 
 The entry point of this library is the TokenHandler class. Before using it you have to set some class instance 
