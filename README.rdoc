@@ -50,3 +50,5 @@ Below you can find an example of how to use it with Sinatra.
 
 This is the second drop, I have added some tests and now there is a good coverage rate but there are many things to improve(check coding conventions, add more features, deeper Rack integration, etc). 
 If you want to use it and have any doubt, just contact me.
+
+Hope you find it useful!
